@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>iamCooperL · Java 后端开发工程师</title>
+  <meta name="description" content="iamCooperL 的个人技术主页：Java 后端、分布式系统、消息驱动与性能优化。" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #070a12;
+      --panel: rgba(15, 21, 36, 0.72);
+      --panel-solid: #0f1524;
+      --line: rgba(149, 167, 205, 0.16);
+      --text: #eef3ff;
+      --muted: #8e9bb5;
+      --cyan: #61e7ff;
+      --violet: #9a7cff;
+      --lime: #c4f36b;
+      --mono: "IBM Plex Mono", monospace;
+      --sans: "Manrope", system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--text);
+      background: var(--bg);
+      font-family: var(--sans);
+      overflow-x: hidden;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .28;
+      background-image: linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+      background-size: 54px 54px;
+      mask-image: linear-gradient(to bottom, black, transparent 86%);
+    }
+    canvas { position: fixed; inset: 0; z-index: -2; opacity: .9; }
+    a { color: inherit; text-decoration: none; }
+    .shell { width: min(1160px, calc(100% - 40px)); margin: 0 auto; }
+    .mono { font-family: var(--mono); }
+
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 10;
+      background: rgba(7, 10, 18, .58);
+      border-bottom: 1px solid transparent;
+      backdrop-filter: blur(18px);
+      transition: .3s ease;
+    }
+    nav.scrolled { border-color: var(--line); background: rgba(7, 10, 18, .85); }
+    .nav-inner { height: 72px; display: flex; align-items: center; justify-content: space-between; }
+    .brand { font-weight: 800; letter-spacing: -.04em; font-size: 18px; }
+    .brand b { color: var(--cyan); }
+    .nav-links { display: flex; gap: 26px; color: var(--muted); font-size: 13px; }
+    .nav-links a:hover { color: var(--text); }
+    .nav-chip { border: 1px solid var(--line); border-radius: 999px; padding: 9px 13px; color: var(--cyan); font-family: var(--mono); font-size: 11px; }
+
+    .hero { min-height: 790px; display: grid; align-items: center; padding: 150px 0 90px; position: relative; }
+    .hero-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 70px; align-items: center; }
+    .eyebrow { display: inline-flex; gap: 10px; align-items: center; color: var(--cyan); font: 500 12px var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+    .eyebrow::before { content: ""; width: 34px; height: 1px; background: var(--cyan); box-shadow: 0 0 15px var(--cyan); }
+    h1 { font-size: clamp(46px, 7vw, 88px); line-height: .98; letter-spacing: -.07em; margin: 23px 0; max-width: 720px; }
+    h1 span { color: transparent; -webkit-text-stroke: 1px rgba(238, 243, 255, .58); }
+    .hero-copy { color: var(--muted); max-width: 580px; font-size: 17px; line-height: 1.9; }
+    .hero-copy strong { color: var(--text); font-weight: 600; }
+    .actions { display: flex; gap: 12px; margin-top: 34px; flex-wrap: wrap; }
+    .button { padding: 13px 18px; border-radius: 10px; font-weight: 700; font-size: 13px; border: 1px solid var(--line); transition: transform .2s, border .2s, background .2s; }
+    .button:hover { transform: translateY(-3px); border-color: rgba(97, 231, 255, .6); }
+    .button.primary { color: #061018; background: var(--cyan); box-shadow: 0 0 32px rgba(97, 231, 255, .23); }
+    .button.ghost { background: rgba(255,255,255,.035); color: var(--text); }
+
+    .terminal { position: relative; background: linear-gradient(145deg, rgba(17,24,43,.94), rgba(9,13,24,.84)); border: 1px solid rgba(97,231,255,.25); border-radius: 18px; padding: 22px; box-shadow: 0 24px 90px rgba(0,0,0,.38), 0 0 65px rgba(97,231,255,.08); transform: rotate(2deg); }
+    .terminal::before { content: ""; position: absolute; inset: -1px; border-radius: inherit; padding: 1px; background: linear-gradient(130deg, var(--cyan), transparent 35%, var(--violet)); mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); mask-composite: exclude; pointer-events: none; }
+    .terminal-top { display: flex; gap: 7px; padding-bottom: 20px; border-bottom: 1px solid var(--line); }
+    .dot { width: 9px; height: 9px; border-radius: 50%; background: #ff6b8b; }
+    .dot:nth-child(2) { background: #ffd166; } .dot:nth-child(3) { background: #73f7aa; }
+    pre { white-space: pre-wrap; margin: 21px 0 0; color: #b8c4dc; font: 12px/2 var(--mono); }
+    .key { color: var(--cyan); } .string { color: var(--lime); } .comment { color: #66758f; }
+    .status { display: flex; gap: 9px; align-items: center; color: var(--muted); font: 11px var(--mono); margin-top: 22px; }
+    .status i { width: 7px; height: 7px; border-radius: 50%; background: var(--lime); box-shadow: 0 0 15px var(--lime); }
+
+    section { padding: 100px 0; position: relative; }
+    .section-head { display: flex; justify-content: space-between; align-items: end; gap: 30px; margin-bottom: 38px; }
+    .section-kicker { color: var(--violet); font: 500 11px var(--mono); letter-spacing: .1em; text-transform: uppercase; }
+    h2 { font-size: clamp(30px, 4vw, 48px); margin: 10px 0 0; letter-spacing: -.06em; }
+    .section-note { color: var(--muted); max-width: 410px; font-size: 14px; line-height: 1.7; }
+
+    .metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .metric, .card { border: 1px solid var(--line); background: var(--panel); backdrop-filter: blur(16px); border-radius: 15px; }
+    .metric { padding: 23px; }
+    .metric strong { display: block; font-size: 31px; letter-spacing: -.06em; color: var(--cyan); }
+    .metric span { display: block; color: var(--muted); font-size: 12px; margin-top: 8px; }
+
+    .projects { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+    .card { padding: 24px; transition: transform .25s, border .25s; }
+    .card:hover { transform: translateY(-7px); border-color: rgba(97,231,255,.42); }
+    .card .index { color: var(--cyan); font: 12px var(--mono); }
+    .card h3 { font-size: 20px; margin: 18px 0 10px; letter-spacing: -.04em; }
+    .card p { color: var(--muted); line-height: 1.7; font-size: 13px; min-height: 70px; }
+    .tags { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 20px; }
+    .tag { color: #b5c4e0; background: rgba(140,156,201,.1); border: 1px solid rgba(140,156,201,.14); padding: 5px 8px; border-radius: 6px; font: 10px var(--mono); }
+    .card-link { display: inline-flex; margin-top: 23px; color: var(--cyan); font: 11px var(--mono); }
+
+    .timeline { border-left: 1px solid rgba(97,231,255,.35); margin-left: 10px; padding-left: 31px; display: grid; gap: 27px; }
+    .timeline-item { position: relative; }
+    .timeline-item::before { content: ""; position: absolute; left: -38px; top: 4px; width: 12px; height: 12px; border-radius: 50%; background: var(--bg); border: 2px solid var(--cyan); box-shadow: 0 0 18px var(--cyan); }
+    .period { color: var(--violet); font: 11px var(--mono); }
+    .timeline h3 { margin: 8px 0; font-size: 20px; }
+    .timeline p { color: var(--muted); line-height: 1.8; font-size: 14px; max-width: 760px; margin: 0; }
+
+    .skills { display: flex; flex-wrap: wrap; gap: 12px; }
+    .skill { padding: 13px 16px; border: 1px solid var(--line); border-radius: 10px; background: rgba(255,255,255,.03); color: #cbd7ef; font: 12px var(--mono); }
+    .skill b { color: var(--lime); font-weight: 500; }
+    .contact { border: 1px solid rgba(154,124,255,.35); background: radial-gradient(circle at 80% 0%, rgba(154,124,255,.16), transparent 45%), var(--panel); border-radius: 20px; padding: 45px; display: flex; justify-content: space-between; align-items: center; gap: 30px; }
+    .contact p { color: var(--muted); margin: 10px 0 0; }
+    footer { padding: 30px 0 45px; color: #65728b; font: 11px var(--mono); display: flex; justify-content: space-between; }
+
+    .reveal { opacity: 0; transform: translateY(22px); transition: opacity .7s ease, transform .7s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+    @media (max-width: 840px) {
+      .nav-links { display: none; }
+      .hero-grid { grid-template-columns: 1fr; gap: 44px; }
+      .terminal { transform: none; max-width: 620px; }
+      .metrics { grid-template-columns: repeat(2, 1fr); }
+      .projects { grid-template-columns: 1fr; }
+      .section-head { display: block; }
+      .section-note { margin-top: 15px; }
+      .contact { display: block; padding: 30px; }
+      .contact .button { display: inline-block; margin-top: 24px; }
+    }
+    @media (max-width: 500px) {
+      .shell { width: min(100% - 28px, 1160px); }
+      .hero { min-height: auto; padding-top: 130px; }
+      h1 { font-size: 53px; }
+      .metrics { grid-template-columns: 1fr 1fr; }
+      .metric { padding: 17px; }
+      .metric strong { font-size: 25px; }
+      section { padding: 75px 0; }
+      footer { display: block; line-height: 2; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="stars" aria-hidden="true"></canvas>
+  <nav id="nav"><div class="shell nav-inner"><a class="brand" href="#top">iamCooperL<span><b>.</b>dev</span></a><div class="nav-links"><a href="#projects">项目</a><a href="#experience">经历</a><a href="#stack">技术栈</a><a href="#contact">联系</a></div><a class="nav-chip" href="https://github.com/iamliyangjing" target="_blank">GITHUB ↗</a></div></nav>
+
+  <main id="top">
+    <section class="hero"><div class="shell hero-grid">
+      <div class="reveal"><div class="eyebrow">JAVA BACKEND · DISTRIBUTED SYSTEMS</div><h1>把复杂业务，<br /><span>写成可靠系统。</span></h1><p class="hero-copy">你好，我是 <strong>iamCooperL</strong>。一名深耕保险业务的后端开发工程师，擅长用 Java、Spring 和消息驱动架构，把高并发、异步任务与复杂流程变成可维护的产品能力。</p><div class="actions"><a class="button primary" href="#projects">查看我的项目 ↓</a><a class="button ghost" href="mailto:958390434@qq.com">联系我 ↗</a></div></div>
+      <div class="terminal reveal"><div class="terminal-top"><i class="dot"></i><i class="dot"></i><i class="dot"></i></div><pre><span class="comment">// current_focus.java</span>
+<span class="key">public record</span> Engineer(
+  <span class="key">String</span> name,
+  <span class="key">String</span> focus,
+  <span class="key">String</span>[] tools
+) {}
+
+<span class="key">var</span> me = <span class="key">new</span> Engineer(
+  <span class="string">"iamCooperL"</span>,
+  <span class="string">"Reliable backend systems"</span>,
+  <span class="key">new</span> String[]{<span class="string">"Java"</span>, <span class="string">"Spring"</span>, <span class="string">"Redis"</span>}
+);</pre><div class="status"><i></i> open to interesting backend problems</div></div>
+    </div></section>
+
+    <section class="reveal"><div class="shell"><div class="metrics"><div class="metric"><strong>75%</strong><span>核心保费计算耗时下降</span></div><div class="metric"><strong>40+</strong><span>本地化保险产品支撑</span></div><div class="metric"><strong>3 年</strong><span>后端研发经验</span></div><div class="metric"><strong>TOP 10%</strong><span>软件工程专业排名</span></div></div></div></section>
+
+    <section id="projects"><div class="shell"><div class="section-head reveal"><div><div class="section-kicker">01 / selected work</div><h2>项目，不是关键词。</h2></div><p class="section-note">从业务流程抽象、性能优化到基础设施设计，这些项目记录了我真正解决过的问题。</p></div><div class="projects">
+      <article class="card reveal"><span class="index">01 — PLATFORM</span><h3>STORM 保险代理平台</h3><p>面向马来西亚市场的保险代理平台，支撑 40+ 款复杂产品。通过配置化 Agreement 和 SaaS 化出单服务，把渠道接入从周级缩短到天级。</p><div class="tags"><span class="tag">SpringBoot</span><span class="tag">MySQL</span><span class="tag">ElasticSearch</span></div><a class="card-link" href="mailto:958390434@qq.com?subject=STORM%20项目交流">了解项目细节 →</a></article>
+      <article class="card reveal"><span class="index">02 — INFRASTRUCTURE</span><h3>本地任务消息组件</h3><p>事件驱动的异步任务基础设施，支持 HTTP / RabbitMQ 双通道、持久化、失败重试、动态调度与物理级多租户隔离。</p><div class="tags"><span class="tag">SpringBoot</span><span class="tag">RabbitMQ</span><span class="tag">DDD</span></div><a class="card-link" href="mailto:958390434@qq.com?subject=任务组件交流">了解项目细节 →</a></article>
+      <article class="card reveal"><span class="index">03 — OPEN SOURCE</span><h3>Mini 分布式 RPC</h3><p>从零实现的轻量 RPC 框架，覆盖 Netty 长连接、协议编解码、序列化、服务发现、负载均衡与 Spring 自动装配。</p><div class="tags"><span class="tag">Netty</span><span class="tag">Zookeeper</span><span class="tag">Kryo</span></div><a class="card-link" href="https://github.com/iamliyangjing/My-Rpc" target="_blank">访问 GitHub →</a></article>
+    </div></div></section>
+
+    <section id="experience"><div class="shell"><div class="section-head reveal"><div><div class="section-kicker">02 / track record</div><h2>一路把系统做深。</h2></div><p class="section-note">我关注的不只是功能交付，也关注系统在压力、故障和变化下的表现。</p></div><div class="timeline"><div class="timeline-item reveal"><div class="period">2023.03 — NOW · 领保科技</div><h3>后端开发工程师 · 寿险事业部</h3><p>负责保险代理平台、保费计算、核保出单等核心系统，完整参与需求评审、开发、测试与上线，主导多个产品的流程抽象与性能优化。</p></div><div class="timeline-item reveal"><div class="period">2022.09 — 2023.02 · AIA</div><h3>后端开发实习生 · CAT</h3><p>参与 D2C 在线购买流程、营销闭环与存储过程读写解耦，定位并解决登录 Session 提前失效问题。</p></div><div class="timeline-item reveal"><div class="period">2019.09 — 2023.07 · 西南石油大学</div><h3>软件工程 · 本科 · 专业排名前 10%</h3><p>获得中国大学生服务外包创新创业大赛国家二等奖，持续参与后端系统与工程实践。</p></div></div></div></section>
+
+    <section id="stack"><div class="shell"><div class="section-head reveal"><div><div class="section-kicker">03 / toolkit</div><h2>我用这些搭系统。</h2></div></div><div class="skills reveal"><span class="skill"><b>LANG</b> Java · JDK 8/11</span><span class="skill"><b>CORE</b> Spring · SpringBoot · MyBatis-Plus</span><span class="skill"><b>DATA</b> MySQL · Redis · ElasticSearch</span><span class="skill"><b>MQ</b> RabbitMQ · Kafka</span><span class="skill"><b>RPC</b> Netty · Zookeeper · Protobuf</span><span class="skill"><b>OPS</b> Linux · Docker · Nginx · Jenkins</span><span class="skill"><b>DESIGN</b> DDD · 并发 · JVM · 设计模式</span></div></div></section>
+
+    <section id="contact"><div class="shell"><div class="contact reveal"><div><div class="section-kicker">04 / say hello</div><h2>有复杂问题？聊聊。</h2><p>如果你正在做后端系统、平台化产品或性能优化，欢迎联系我。</p></div><a class="button primary" href="mailto:958390434@qq.com">958390434@qq.com ↗</a></div></div></section>
+  </main>
+  <footer class="shell"><span>© 2026 iamCooperL</span><span>BUILT WITH JAVA · CURIOSITY · CLEAN CODE</span></footer>
+
+  <script>
+    const canvas = document.getElementById('stars');
+    const ctx = canvas.getContext('2d');
+    const stars = [];
+    const resize = () => { canvas.width = innerWidth * devicePixelRatio; canvas.height = innerHeight * devicePixelRatio; ctx.scale(devicePixelRatio, devicePixelRatio); };
+    const makeStars = () => { stars.length = 0; for (let i = 0; i < Math.min(110, innerWidth / 9); i += 1) stars.push({ x: Math.random() * innerWidth, y: Math.random() * innerHeight, r: Math.random() * 1.4 + .25, a: Math.random() * .65 + .15, s: Math.random() * .003 + .001 }); };
+    const draw = () => { ctx.clearRect(0, 0, innerWidth, innerHeight); stars.forEach(star => { star.a += Math.sin(Date.now() * star.s) * .004; ctx.beginPath(); ctx.fillStyle = `rgba(97,231,255,${Math.max(.05, star.a)})`; ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2); ctx.fill(); }); requestAnimationFrame(draw); };
+    resize(); makeStars(); draw(); addEventListener('resize', () => { resize(); makeStars(); });
+    const nav = document.getElementById('nav'); addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 30));
+    const observer = new IntersectionObserver(entries => entries.forEach(entry => entry.isIntersecting && entry.target.classList.add('visible')), { threshold: .12 }); document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
